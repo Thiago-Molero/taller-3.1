@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infografía – Taller 3.1: Operaciones Unarias</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --surface: #111827;
+    --card: #161f33;
+    --border: rgba(99,179,255,0.15);
+    --accent1: #3b82f6;
+    --accent2: #06b6d4;
+    --accent3: #a78bfa;
+    --accent4: #34d399;
+    --accent5: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Sora', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    text-align: center;
+    margin-bottom: 72px;
+    animation: fadeDown .8s ease both;
+  }
+
+  .tag {
+    display: inline-block;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.35);
+    color: var(--accent1);
+    font-family: var(--mono);
+    font-size: .72rem;
+    letter-spacing: .15em;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #93c5fd 0%, #38bdf8 50%, #a5f3fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    margin: 28px auto 0;
+    border-radius: 2px;
+  }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .2em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── INTRO CARDS ─── */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 64px;
+    animation: fadeUp .8s .2s ease both;
+  }
+
+  .intro-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s, border-color .25s;
+  }
+  .intro-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99,179,255,0.4);
+  }
+  .intro-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+  .intro-card.c1::before { background: var(--accent1); }
+  .intro-card.c2::before { background: var(--accent2); }
+  .intro-card.c3::before { background: var(--accent3); }
+  .intro-card.c4::before { background: var(--accent4); }
+
+  .ic-icon {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .ic-label {
+    font-family: var(--mono);
+    font-size: .65rem;
+    letter-spacing: .12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .ic-value {
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  /* ─── ALGEBRA SECTION ─── */
+  .algebra-section {
+    margin-bottom: 64px;
+    animation: fadeUp .8s .3s ease both;
+  }
+
+  .op-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width: 640px) {
+    .op-grid { grid-template-columns: 1fr; }
+  }
+
+  .op-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .25s, box-shadow .25s;
+  }
+  .op-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.4);
+  }
+
+  .op-card.select { border-color: rgba(59,130,246,0.3); }
+  .op-card.project { border-color: rgba(167,139,250,0.3); }
+
+  .op-symbol {
+    font-family: var(--mono);
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 12px;
+    display: block;
+  }
+  .op-card.select .op-symbol { color: var(--accent1); }
+  .op-card.project .op-symbol { color: var(--accent3); }
+
+  .op-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .op-formula {
+    font-family: var(--mono);
+    font-size: .82rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 14px 0;
+    color: var(--accent2);
+  }
+  .op-desc {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 20px;
+  }
+
+  .op-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .op-tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    font-size: .72rem;
+    font-family: var(--mono);
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: var(--muted);
+  }
+  .op-card.select .op-tag { border-color: rgba(59,130,246,0.25); color: #93c5fd; }
+  .op-card.project .op-tag { border-color: rgba(167,139,250,0.25); color: #c4b5fd; }
+
+  /* ─── TECH STACK ─── */
+  .tech-section {
+    margin-bottom: 64px;
+    animation: fadeUp .8s .4s ease both;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media(max-width: 600px) {
+    .tech-grid { grid-template-columns: 1fr; }
+  }
+
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 22px;
+    text-align: center;
+    transition: transform .25s, border-color .25s;
+  }
+  .tech-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99,179,255,0.3);
+  }
+  .tech-icon {
+    font-size: 2.5rem;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .tech-name {
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  .tech-name.ef  { color: var(--accent1); }
+  .tech-name.linq { color: var(--accent4); }
+  .tech-name.nw  { color: var(--accent5); }
+  .tech-desc {
+    font-size: .82rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .tech-pill {
+    font-family: var(--mono);
+    font-size: .65rem;
+    padding: 3px 9px;
+    border-radius: 99px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+  }
+
+  /* ─── DATABASE TABLES ─── */
+  .db-section {
+    margin-bottom: 64px;
+    animation: fadeUp .8s .5s ease both;
+  }
+
+  .db-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .db-table {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s;
+  }
+  .db-table:hover {
+    transform: translateY(-3px);
+    border-color: rgba(245,158,11,0.4);
+  }
+  .db-table-header {
+    background: rgba(245,158,11,0.1);
+    border-bottom: 1px solid rgba(245,158,11,0.2);
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--accent5);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .db-table-body {
+    padding: 10px 14px;
+  }
+  .db-field {
+    font-family: var(--mono);
+    font-size: .68rem;
+    color: var(--muted);
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .db-field.pk { color: var(--accent5); }
+  .field-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+  }
+  .db-field.pk .field-dot { background: var(--accent5); }
+
+  /* ─── OBJECTIVES ─── */
+  .obj-section {
+    margin-bottom: 64px;
+    animation: fadeUp .8s .6s ease both;
+  }
+
+  .obj-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .obj-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: transform .2s;
+  }
+  .obj-item:hover { transform: translateX(4px); }
+
+  .obj-num {
+    font-family: var(--mono);
+    font-size: .7rem;
+    font-weight: 700;
+    color: var(--accent1);
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .obj-text {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  /* ─── CONCLUSIONS ─── */
+  .conc-section {
+    margin-bottom: 64px;
+    animation: fadeUp .8s .7s ease both;
+  }
+
+  .conc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .conc-card {
+    background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(6,182,212,0.04));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 14px;
+    padding: 22px 20px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .conc-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(59,130,246,0.1);
+  }
+  .conc-icon {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .conc-text {
+    font-size: .86rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding-top: 40px;
+    animation: fadeUp .8s .8s ease both;
+  }
+
+  .footer-label {
+    font-family: var(--mono);
+    font-size: .7rem;
+    letter-spacing: .15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .students {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .student {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: .8rem;
+    color: var(--text);
+    font-family: var(--mono);
+  }
+  .student span {
+    color: var(--accent4);
+    font-size: .65rem;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: var(--accent1);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: var(--mono);
+    font-size: .78rem;
+    transition: background .2s, transform .2s;
+  }
+  .link-btn:hover {
+    background: rgba(59,130,246,0.2);
+    transform: translateY(-2px);
+  }
+
+  .meta {
+    margin-top: 32px;
+    font-size: .72rem;
+    color: rgba(148,163,184,0.4);
+    font-family: var(--mono);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── RENOMBRAMIENTO CARD ─── */
+  .rename-card {
+    background: var(--card);
+    border: 1px solid rgba(52,211,153,0.25);
+    border-radius: 20px;
+    padding: 32px 28px;
+    margin-bottom: 64px;
+    animation: fadeUp .8s .35s ease both;
+  }
+  .rename-symbol {
+    font-family: var(--mono);
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent4);
+    display: block;
+    margin-bottom: 12px;
+  }
+  .rename-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent4);
+    margin-bottom: 8px;
+  }
+  .rename-formula {
+    font-family: var(--mono);
+    font-size: .82rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin: 14px 0;
+    color: var(--accent4);
+    display: inline-block;
+  }
+  .rename-desc {
+    font-size: .88rem;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 600px;
+  }
+  .rename-uses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .rename-use {
+    background: rgba(52,211,153,0.08);
+    border: 1px solid rgba(52,211,153,0.2);
+    color: var(--accent4);
+    font-size: .72rem;
+    font-family: var(--mono);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="tag">Universidad Andina del Cusco · Ingeniería de Sistemas</div>
+    <h1>Operaciones Unarias<br>del Álgebra Relacional</h1>
+    <p class="subtitle">Taller 3.1 — Modelado de Bases de Datos · Entity Framework · LINQ · Northwind</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- META CARDS -->
+  <div class="section-title">Contexto del Taller</div>
+  <div class="intro-grid">
+    <div class="intro-card c1">
+      <span class="ic-icon">📚</span>
+      <div class="ic-label">Asignatura</div>
+      <div class="ic-value">Modelado de Bases de Datos</div>
+    </div>
+    <div class="intro-card c2">
+      <span class="ic-icon">🗄️</span>
+      <div class="ic-label">Base de Datos</div>
+      <div class="ic-value">Northwind (distribución de productos)</div>
+    </div>
+    <div class="intro-card c3">
+      <span class="ic-icon">⚙️</span>
+      <div class="ic-label">Tecnología</div>
+      <div class="ic-value">ADO.NET + Entity Framework + LINQ</div>
+    </div>
+    <div class="intro-card c4">
+      <span class="ic-icon">🎯</span>
+      <div class="ic-label">Enfoque</div>
+      <div class="ic-value">Selección · Proyección · Renombramiento</div>
+    </div>
+  </div>
+
+  <!-- OPERACIONES PRINCIPALES -->
+  <div class="section-title">Operaciones Unarias</div>
+  <div class="op-grid" style="margin-bottom: 20px;">
+    <div class="op-card select">
+      <span class="op-symbol">σ</span>
+      <div class="op-name">Selección</div>
+      <div class="op-formula">σ condición (Relación)</div>
+      <p class="op-desc">Filtra las <strong>filas</strong> de una tabla según un predicado lógico. El resultado contiene únicamente los registros que cumplen la condición establecida.</p>
+      <div class="op-tags">
+        <span class="op-tag">Comparación</span>
+        <span class="op-tag">Rango</span>
+        <span class="op-tag">Pertenencia</span>
+        <span class="op-tag">AND / OR</span>
+        <span class="op-tag">Desigualdad</span>
+      </div>
+    </div>
+    <div class="op-card project">
+      <span class="op-symbol">π</span>
+      <div class="op-name">Proyección</div>
+      <div class="op-formula">π atributos (Relación)</div>
+      <p class="op-desc">Selecciona únicamente ciertas <strong>columnas</strong> de una tabla. Reduce la información mostrada enfocándose en los datos relevantes para la consulta.</p>
+      <div class="op-tags">
+        <span class="op-tag">Columnas específicas</span>
+        <span class="op-tag">Eliminar duplicados</span>
+        <span class="op-tag">Subconjunto relevante</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RENOMBRAMIENTO -->
+  <div class="rename-card">
+    <span class="rename-symbol">ρ</span>
+    <div class="rename-name">Renombramiento</div>
+    <div class="rename-formula">ρ nuevo_nombre (Relación)</div>
+    <p class="rename-desc">Permite asignar un alias a una relación o a sus atributos. Es útil para evitar ambigüedades cuando se trabaja con múltiples relaciones o se reutiliza la misma tabla en una consulta.</p>
+    <div class="rename-uses">
+      <span class="rename-use">Alias: Apellido</span>
+      <span class="rename-use">Alias: Obra</span>
+      <span class="rename-use">Alias: Editorial</span>
+      <span class="rename-use">Alias: Empleado</span>
+      <span class="rename-use">Alias: Local</span>
+    </div>
+  </div>
+
+  <!-- TECNOLOGÍAS -->
+  <div class="section-title">Stack Tecnológico</div>
+  <div class="tech-section">
+    <div class="tech-grid">
+      <div class="tech-card">
+        <span class="tech-icon">🔷</span>
+        <div class="tech-name ef">Entity Framework</div>
+        <p class="tech-desc">ORM de Microsoft que mapea tablas relacionales a clases en C#, eliminando SQL extenso.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Objetos C#</span>
+          <span class="tech-pill">ORM</span>
+          <span class="tech-pill">Mantenible</span>
+        </div>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🔗</span>
+        <div class="tech-name linq">LINQ</div>
+        <p class="tech-desc">Language Integrated Query — sintaxis declarativa integrada en C# para filtrar, proyectar, ordenar y agrupar datos.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Filtrado</span>
+          <span class="tech-pill">Proyección</span>
+          <span class="tech-pill">Agrupamiento</span>
+        </div>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🌐</span>
+        <div class="tech-name nw">Northwind DB</div>
+        <p class="tech-desc">Base de datos de ejemplo que simula una empresa distribuidora de productos alimenticios con múltiples entidades relacionadas.</p>
+        <div class="tech-pills">
+          <span class="tech-pill">Clientes</span>
+          <span class="tech-pill">Pedidos</span>
+          <span class="tech-pill">Productos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLAS DE BD -->
+  <div class="section-title">Entidades Northwind Utilizadas</div>
+  <div class="db-section">
+    <div class="db-grid">
+
+      <div class="db-table">
+        <div class="db-table-header">🛒 Products</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>ProductID</div>
+          <div class="db-field"><span class="field-dot"></span>ProductName</div>
+          <div class="db-field"><span class="field-dot"></span>UnitPrice</div>
+          <div class="db-field"><span class="field-dot"></span>UnitsInStock</div>
+          <div class="db-field"><span class="field-dot"></span>CategoryID</div>
+        </div>
+      </div>
+
+      <div class="db-table">
+        <div class="db-table-header">👥 Customers</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>CustomerID</div>
+          <div class="db-field"><span class="field-dot"></span>CompanyName</div>
+          <div class="db-field"><span class="field-dot"></span>ContactName</div>
+          <div class="db-field"><span class="field-dot"></span>City</div>
+          <div class="db-field"><span class="field-dot"></span>Country</div>
+        </div>
+      </div>
+
+      <div class="db-table">
+        <div class="db-table-header">📦 Categories</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>CategoryID</div>
+          <div class="db-field"><span class="field-dot"></span>CategoryName</div>
+          <div class="db-field"><span class="field-dot"></span>Description</div>
+        </div>
+      </div>
+
+      <div class="db-table">
+        <div class="db-table-header">🧑‍💼 Employees</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>EmployeeID</div>
+          <div class="db-field"><span class="field-dot"></span>FirstName</div>
+          <div class="db-field"><span class="field-dot"></span>LastName</div>
+          <div class="db-field"><span class="field-dot"></span>HireDate</div>
+        </div>
+      </div>
+
+      <div class="db-table">
+        <div class="db-table-header">📋 Orders</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>OrderID</div>
+          <div class="db-field"><span class="field-dot"></span>CustomerID</div>
+          <div class="db-field"><span class="field-dot"></span>EmployeeID</div>
+          <div class="db-field"><span class="field-dot"></span>OrderDate</div>
+          <div class="db-field"><span class="field-dot"></span>ShippedDate</div>
+        </div>
+      </div>
+
+      <div class="db-table">
+        <div class="db-table-header">🏭 Suppliers</div>
+        <div class="db-table-body">
+          <div class="db-field pk"><span class="field-dot"></span>SupplierID</div>
+          <div class="db-field"><span class="field-dot"></span>CompanyName</div>
+          <div class="db-field"><span class="field-dot"></span>Country</div>
+          <div class="db-field"><span class="field-dot"></span>City</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- OBJETIVOS -->
+  <div class="section-title">Objetivos del Taller</div>
+  <div class="obj-section">
+    <div class="obj-list">
+      <div class="obj-item">
+        <div class="obj-num">01</div>
+        <div class="obj-text">Implementar consultas de <strong>selección</strong> con distintos tipos de condiciones y predicados.</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">02</div>
+        <div class="obj-text">Desarrollar consultas de <strong>proyección</strong> para obtener subconjuntos de atributos.</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">03</div>
+        <div class="obj-text">Comprender el funcionamiento de las operaciones unarias dentro del modelo relacional.</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">04</div>
+        <div class="obj-text">Utilizar <strong>LINQ y Entity Framework</strong> para acceder y manipular datos de forma eficiente.</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">05</div>
+        <div class="obj-text">Interpretar los resultados obtenidos a partir de las consultas implementadas.</div>
+      </div>
+      <div class="obj-item">
+        <div class="obj-num">06</div>
+        <div class="obj-text">Fortalecer habilidades en <strong>programación orientada a datos</strong> y consultas declarativas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSIONES -->
+  <div class="section-title">Conclusiones</div>
+  <div class="conc-section">
+    <div class="conc-grid">
+      <div class="conc-card">
+        <span class="conc-icon">✅</span>
+        <p class="conc-text">Las operaciones unarias permiten manipular información de forma <strong>estructurada y eficiente</strong>.</p>
+      </div>
+      <div class="conc-card">
+        <span class="conc-icon">🔷</span>
+        <p class="conc-text">Entity Framework <strong>simplifica</strong> el acceso y manipulación de datos en aplicaciones C#.</p>
+      </div>
+      <div class="conc-card">
+        <span class="conc-icon">🔗</span>
+        <p class="conc-text">LINQ proporciona una sintaxis <strong>clara y legible</strong> para consultas declarativas.</p>
+      </div>
+      <div class="conc-card">
+        <span class="conc-icon">🌐</span>
+        <p class="conc-text">Northwind permitió desarrollar ejemplos similares a <strong>escenarios empresariales reales</strong>.</p>
+      </div>
+      <div class="conc-card">
+        <span class="conc-icon">⚡</span>
+        <p class="conc-text">Selección (σ) y proyección (π) son <strong>fundamentales</strong> en el procesamiento relacional de datos.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-label">Docente: Espetia Huamanga Hugo</div>
+    <div class="students">
+      <div class="student">Carpio Delgado, Alejandro E.<span>024100051j</span></div>
+      <div class="student">Haro Rosales, Joaquín<span>024100970e</span></div>
+      <div class="student">Molero Zegarra, Thiago V.<span>024100247a</span></div>
+      <div class="student">Olivera Ochoa, Paúl C.<span>024100569i</span></div>
+    </div>
+    <div class="links">
+      <a class="link-btn" href="https://github.com/Thiago-Molero/taller-3.1" target="_blank">⌥ GitHub Repository</a>
+      <a class="link-btn" href="https://thiago-molero.github.io/taller-3.1/" target="_blank">🌐 Infografía Web</a>
+    </div>
+    <div class="meta">Universidad Andina del Cusco · Facultad de Ingeniería y Arquitectura · 2024</div>
+  </footer>
+
+</div>
+</body>
+</html>
